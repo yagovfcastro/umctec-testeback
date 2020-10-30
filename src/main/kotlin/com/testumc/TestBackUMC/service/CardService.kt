@@ -1,14 +1,8 @@
 package com.testumc.TestBackUMC.service
 
 import com.testumc.TestBackUMC.dto.CreateCardDTO
-import com.testumc.TestBackUMC.entity.Bill
 import com.testumc.TestBackUMC.entity.Card
-import com.testumc.TestBackUMC.entity.HealthInsurance
-import com.testumc.TestBackUMC.entity.Patient
-import com.testumc.TestBackUMC.repository.BillRepository
 import com.testumc.TestBackUMC.repository.CardRepository
-import com.testumc.TestBackUMC.repository.HealthInsuranceRepository
-import com.testumc.TestBackUMC.repository.PatientRepository
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -21,6 +15,9 @@ class CardService(val cardRepository: CardRepository) {
       activityId = card.activityId,
       createdAt = Date(),
       totalAmount = 30.50,
+      patient = card.patient,
+      bill = card.bill,
+      healthInsurance = card.healthInsurance,
       numberOfPendencies = card.numberOfPendencies,
       numberOfOpenPendencies = card.numberOfOpenPendencies,
       numberOfDocuments = card.numberOfDocuments,
