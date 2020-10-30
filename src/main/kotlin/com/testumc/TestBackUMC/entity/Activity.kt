@@ -13,6 +13,6 @@ class Activity(
   val activityTitle: String,
   val activitySubTitle: String,
   val createdAt: Date,
-  val sla: Int
+  val sla: Int,
 
 )

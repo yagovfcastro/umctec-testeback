@@ -28,4 +28,6 @@ class CardService(val cardRepository: CardRepository) {
 
     return this.cardRepository.save(newCard)
   }
+
+  fun listAllCards() = this.cardRepository.findAll()
 }
