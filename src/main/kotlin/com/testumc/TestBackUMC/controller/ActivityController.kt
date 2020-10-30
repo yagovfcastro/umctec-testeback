@@ -12,6 +12,6 @@ class ActivityController(val activityService: ActivityService) {
   private fun create(@RequestBody activity: CreateActivityDTO) = this.activityService.store(activity)
 
   @GetMapping
-  private fun getAll() = this.activityService.listAll()
+  private fun getAll() = this.activityService.listAllActivities()
 
 }

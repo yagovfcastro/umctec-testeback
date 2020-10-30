@@ -19,5 +19,5 @@ class ActivityService(val activityRepository: ActivityRepository) {
     return this.activityRepository.save(newActivity)
   }
 
-  fun listAll() = this.activityRepository.findAll()
+  fun listAllActivities() = this.activityRepository.findAll()
 }
