@@ -9,5 +9,6 @@ enum class BillType {
 
 class Bill (
   @Id @GeneratedValue val billId: Long = 0L,
-  val billType: BillType
+  val billType: BillType,
+  val billPrice: Double
 )
