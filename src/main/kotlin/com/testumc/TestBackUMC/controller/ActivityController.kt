@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 class ActivityController(val activityService: ActivityService) {
 
   @PostMapping
-  private fun create(@RequestBody activity: CreateActivityDTO) = this.activityService.store(activity)
+  private fun createActivity(@RequestBody activity: CreateActivityDTO) = this.activityService.store(activity)
 
   @GetMapping
   private fun getAll() = this.activityService.listAllActivities()
