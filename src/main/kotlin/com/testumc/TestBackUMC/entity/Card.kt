@@ -4,12 +4,14 @@ import java.util.*
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
+import javax.persistence.Table
 
 @Entity
-class Card (
+@Table(name = "Card")
+class Card ( // Lacks visitId, I need to know what it is
   @Id @GeneratedValue val cardId: Long = 0L,
+  val activityId: Long,
   val createdAt: Date,
-  val slaStatus: String,
   val patient: Patient,
   val healthInsurance: HealthInsurance,
   val bill: Bill,

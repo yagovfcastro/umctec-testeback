@@ -1,14 +1,10 @@
 package com.testumc.TestBackUMC.entity
 
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
+import javax.persistence.*
 
-enum class BillType {
-  HOSPITALAR, AMBULATORIAL
-}
-
+@Embeddable
 class Bill (
   @Id @GeneratedValue val billId: Long = 0L,
-  val billType: BillType,
+  val billType: String,
   val billPrice: Double
 )
