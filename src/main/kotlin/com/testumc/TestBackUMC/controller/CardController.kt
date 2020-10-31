@@ -1,5 +1,6 @@
 package com.testumc.TestBackUMC.controller
 
+import com.testumc.TestBackUMC.dto.CardsResponseDTO
 import com.testumc.TestBackUMC.dto.CreateCardDTO
 import com.testumc.TestBackUMC.entity.Card
 import com.testumc.TestBackUMC.service.CardService
@@ -16,26 +17,10 @@ class CardController(val cardService: CardService) {
   @GetMapping
   private fun getAll() = this.cardService.listAllCards()
 
-  @GetMapping("/test")
-  private fun getByActivityId1(@RequestParam("activityId") activityId: Long): List<Card> {
+  @GetMapping("/{id}")
+  private fun getByActivityId(@PathVariable id: Long): List<Card>{
 
-    val allCards = getAll()
-    val listCards: MutableList<Card> = mutableListOf()
-
-    for (card in listCards) {
-      if (card.activityId == activityId) {
-        listCards.add(card)
-      }
-    }
-
-    return listCards
-  }
-
-  @GetMapping("/yago/{id}")
-  private fun getByActivityId(@PathVariable id: Long) {
-    val listOfCards: List<Card> = listOf()
-
-
+    return this.cardService.listByActivityId(id)
   }
 
   // You have to learn how to deal with a filter

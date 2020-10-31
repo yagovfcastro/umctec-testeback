@@ -4,4 +4,6 @@ import com.testumc.TestBackUMC.entity.Card
 import org.springframework.data.repository.CrudRepository
 
 interface CardRepository : CrudRepository<Card, Long> {
+
+  fun findAllByActivityId(activityId: Long): List<Card>
 }

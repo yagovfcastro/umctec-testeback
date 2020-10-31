@@ -30,4 +30,7 @@ class CardService(val cardRepository: CardRepository) {
   }
 
   fun listAllCards() = this.cardRepository.findAll()
+
+  fun listByActivityId(activityId: Long) = this.cardRepository.findAllByActivityId(activityId)
+
 }
