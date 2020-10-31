@@ -9,4 +9,6 @@ interface CardRepository : JpaRepository<Card, Long> {
 
 
   fun findAllByActivityId(activityId: Long, pageable: Pageable): List<Card>
+
+  fun findAllByActivityIdAndPatientPatientName(activityId: Long, patientName: String, pageable: Pageable): List<Card>
 }

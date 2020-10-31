@@ -33,10 +33,14 @@ class CardService(val cardRepository: CardRepository) {
     return this.cardRepository.save(newCard)
   }
 
-  fun listByActivityId(activityId: Long, page: Int, size: Int) : List<Card> {
+  fun listByActivityIdAndPatientName(activityId: Long, patientName: String?, page: Int, size: Int) : List<Card> {
     val paging: Pageable = PageRequest.of(page, size)
 
-    return this.cardRepository.findAllByActivityId(activityId, paging)
+    if (patientName == null) {
+      return this.cardRepository.findAllByActivityId(activityId, paging)
+    }
+
+    return this.cardRepository.findAllByActivityIdAndPatientPatientName(activityId, patientName, paging)
   }
 
 }
