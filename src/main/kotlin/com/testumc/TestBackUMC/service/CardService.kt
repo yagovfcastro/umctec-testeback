@@ -2,6 +2,7 @@ package com.testumc.TestBackUMC.service
 
 import com.testumc.TestBackUMC.dto.CreateCardDTO
 import com.testumc.TestBackUMC.entity.Card
+import com.testumc.TestBackUMC.entity.SlaStatus.*
 import com.testumc.TestBackUMC.repository.CardRepository
 import org.springframework.stereotype.Service
 import java.util.*
@@ -14,9 +15,10 @@ class CardService(val cardRepository: CardRepository) {
     val newCard = Card(
       activityId = card.activityId,
       createdAt = Date(),
-      totalAmount = 30.50,
       patient = card.patient,
       bill = card.bill,
+      slaStatus = OK,
+      totalAmount = card.bill.billPrice,
       healthInsurance = card.healthInsurance,
       numberOfPendencies = card.numberOfPendencies,
       numberOfOpenPendencies = card.numberOfOpenPendencies,

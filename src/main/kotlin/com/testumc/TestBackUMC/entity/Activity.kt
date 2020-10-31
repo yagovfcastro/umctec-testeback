@@ -14,5 +14,4 @@ class Activity(
   val activitySubTitle: String,
   val createdAt: Date,
   val sla: Int,
-
 )

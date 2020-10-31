@@ -20,6 +20,8 @@ class CardController(val cardService: CardService) {
   @GetMapping("/{id}")
   private fun getByActivityId(@PathVariable id: Long): List<Card>{
 
+
+
     return this.cardService.listByActivityId(id)
   }
 

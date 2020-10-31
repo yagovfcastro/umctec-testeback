@@ -3,12 +3,18 @@ package com.testumc.TestBackUMC.entity
 import java.util.*
 import javax.persistence.*
 
+enum class SlaStatus {
+  OK, WARNING, DELAYED
+}
+
 @Entity
 @Table(name = "Card")
-class Card ( // Lacks visitId, I need to know what it is
+class Card ( // Still confused about visitId
   @Id @GeneratedValue
   val cardId: Long = 0L,
   val activityId: Long,
+  val visitId: Long = 823897,
+  val slaStatus: SlaStatus,
   val createdAt: Date,
   @Embedded
   val patient: Patient,
