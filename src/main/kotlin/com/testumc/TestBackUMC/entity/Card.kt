@@ -1,5 +1,6 @@
 package com.testumc.TestBackUMC.entity
 
+import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
@@ -14,8 +15,8 @@ class Card ( // Still confused about visitId
   val cardId: Long = 0L,
   val activityId: Long,
   val visitId: Long = 823897,
-  val slaStatus: SlaStatus,
-  val createdAt: Date,
+  var slaStatus: SlaStatus,
+  val createdAt: LocalDateTime,
   @Embedded
   val patient: Patient,
   @Embedded

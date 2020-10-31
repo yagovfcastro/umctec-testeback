@@ -1,5 +1,6 @@
 package com.testumc.TestBackUMC.entity
 
+import java.time.LocalDateTime
 import javax.persistence.Id
 import java.util.*
 import javax.persistence.Entity
@@ -12,6 +13,6 @@ class Activity(
   @Id @GeneratedValue val activityId: Long = 0L,
   val activityTitle: String,
   val activitySubTitle: String,
-  val createdAt: Date,
+  val createdAt: LocalDateTime,
   val sla: Int,
 )

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface CardRepository : JpaRepository<Card, Long> {
 
+  fun findAllByActivityId(activityId: Long): List<Card>
 
   fun findAllByActivityId(activityId: Long, pageable: Pageable): List<Card>
 

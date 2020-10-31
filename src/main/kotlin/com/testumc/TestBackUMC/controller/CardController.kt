@@ -6,7 +6,6 @@ import com.testumc.TestBackUMC.entity.Card
 import com.testumc.TestBackUMC.service.CardService
 import org.springframework.web.bind.annotation.*
 
-
 @RestController
 @RequestMapping("/cards")
 class CardController(val cardService: CardService) {
