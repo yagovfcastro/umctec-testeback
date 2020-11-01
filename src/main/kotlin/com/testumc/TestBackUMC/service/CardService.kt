@@ -9,6 +9,7 @@ import com.testumc.TestBackUMC.repository.ActivityRepository
 import com.testumc.TestBackUMC.repository.CardRepository
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -37,23 +38,20 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
     return this.cardRepository.save(newCard)
   }
 
-  fun listByActivityIdAndPatientName(activityId: Long, patientName: String?, page: Int, size: Int) : CardsResponseDTO {
-    val paging: Pageable = PageRequest.of(page, size)
-    val activity: Activity = this.activityRepository.findById(activityId).get()
-    val cardsResponseDTO: CardsResponseDTO = CardsResponseDTO()
-
-    val totalCardsList = updateCardsSlaStatuses(activityId)
+  fun listByActivityIdAndPatientName(activityId: Long, patientName: String?, filter: String, page: Int, size: Int) : CardsResponseDTO {
+    val paging: Pageable = PageRequest.of(page, size, Sort.by("slaStatus").descending())
+    val totalCardsList = updateCardsSlaStatusesAndQuantity(activityId)
     val totalCardsOk = totalCardsList[0]
     val totalCardsWarning = totalCardsList[1]
     val totalCardsDelayed = totalCardsList[2]
 
-
+    val cardsResponseDTO: CardsResponseDTO = CardsResponseDTO()
     cardsResponseDTO.totalCardsOk = totalCardsOk
     cardsResponseDTO.totalCardsWarning = totalCardsWarning
     cardsResponseDTO.totalCardsDelayed = totalCardsDelayed
 
     if (patientName == null) {
-      cardsResponseDTO.cards = this.cardRepository.findAllByActivityId(activityId, paging)
+      cardsResponseDTO.cards = executeFilter(activityId, paging, filter)
       return cardsResponseDTO
     }
 
@@ -62,14 +60,12 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
     return cardsResponseDTO
   }
 
-  // Updates the slaStatus of the Card
-  // It counts and returns the total cards Ok, Warning and Delayed
-  fun updateCardsSlaStatuses(activityId: Long): IntArray {
+  fun updateCardsSlaStatusesAndQuantity(activityId: Long): IntArray {
     val allCardsFromActivity =  this.cardRepository.findAllByActivityId(activityId)
     val activity: Activity = this.activityRepository.findById(activityId).get()
     val currentDate = LocalDateTime.now()
 
-    var totalCardsList = IntArray(3)
+    val totalCardsList = IntArray(3)
 
     for (card in allCardsFromActivity) {
       val cardCreationDate = card.createdAt
@@ -90,6 +86,15 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
     return totalCardsList
   }
 
-  // Hand written filter, using the filter function
+  fun executeFilter(activityId: Long, paging: Pageable, filter: String): List<Card> {
+      when (filter) {
+        "PRIORITY" -> return this.cardRepository.findAllByActivityId(activityId, paging)
+        "TO_RECEIVE" -> return this.cardRepository.findAllByActivityId(activityId, paging).filter { it.numberOfNotReceivedDocuments != 0 }
+        else -> return this.cardRepository.findAllByActivityId(activityId, paging).filter {
+            it.numberOfNotReceivedDocuments == 0 &&
+            it.numberOfChecklistItem == it.numberOfDoneChecklistItem &&
+            it.numberOfOpenPendencies == 0}
+      }
+  }
 
 }
