@@ -1,5 +1,6 @@
 package com.testumc.TestBackUMC.service
 
+import com.testumc.TestBackUMC.dto.CardsResponseDTO
 import com.testumc.TestBackUMC.dto.CreateCardDTO
 import com.testumc.TestBackUMC.entity.Activity
 import com.testumc.TestBackUMC.entity.Card
@@ -36,37 +37,59 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
     return this.cardRepository.save(newCard)
   }
 
-  fun listByActivityIdAndPatientName(activityId: Long, patientName: String?, page: Int, size: Int) : List<Card> {
+  fun listByActivityIdAndPatientName(activityId: Long, patientName: String?, page: Int, size: Int) : CardsResponseDTO {
     val paging: Pageable = PageRequest.of(page, size)
     val activity: Activity = this.activityRepository.findById(activityId).get()
+    val cardsResponseDTO: CardsResponseDTO = CardsResponseDTO()
 
-    updateCardsSlaStatuses(activityId)
+    val totalCardsList = updateCardsSlaStatuses(activityId)
+    val totalCardsOk = totalCardsList[0]
+    val totalCardsWarning = totalCardsList[1]
+    val totalCardsDelayed = totalCardsList[2]
+
+
+    cardsResponseDTO.totalCardsOk = totalCardsOk
+    cardsResponseDTO.totalCardsWarning = totalCardsWarning
+    cardsResponseDTO.totalCardsDelayed = totalCardsDelayed
 
     if (patientName == null) {
-      return this.cardRepository.findAllByActivityId(activityId, paging)
+      cardsResponseDTO.cards = this.cardRepository.findAllByActivityId(activityId, paging)
+      return cardsResponseDTO
     }
 
-    return this.cardRepository.findAllByActivityIdAndPatientPatientName(activityId, patientName, paging)
+    cardsResponseDTO.cards = this.cardRepository.findAllByActivityIdAndPatientPatientName(activityId, patientName, paging)
+
+    return cardsResponseDTO
   }
 
-  fun updateCardsSlaStatuses(activityId: Long) {
+  // Updates the slaStatus of the Card
+  // It counts and returns the total cards Ok, Warning and Delayed
+  fun updateCardsSlaStatuses(activityId: Long): IntArray {
     val allCardsFromActivity =  this.cardRepository.findAllByActivityId(activityId)
     val activity: Activity = this.activityRepository.findById(activityId).get()
     val currentDate = LocalDateTime.now()
 
-    // Loop to see the slaStatuses and try to change them
+    var totalCardsList = IntArray(3)
+
     for (card in allCardsFromActivity) {
       val cardCreationDate = card.createdAt
       val daysInBetween = cardCreationDate.until(currentDate, ChronoUnit.DAYS)
 
       if (daysInBetween < (activity.sla * 75) / 100) {
         this.cardRepository.findById(card.cardId).get().slaStatus = OK
+        totalCardsList[0] += 1
       } else if (daysInBetween <= activity.sla && daysInBetween > (activity.sla * 75) / 100) {
         this.cardRepository.findById(card.cardId).get().slaStatus = WARNING
+        totalCardsList[1] += 1
       } else {
         this.cardRepository.findById(card.cardId).get().slaStatus = DELAYED
+        totalCardsList[2] += 1
       }
     }
+
+    return totalCardsList
   }
+
+  // Hand written filter, using the filter function
 
 }
