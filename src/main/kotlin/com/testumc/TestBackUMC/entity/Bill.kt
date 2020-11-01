@@ -8,7 +8,8 @@ enum class BillType {
 
 @Embeddable
 class Bill (
-  @GeneratedValue val billId: Long = 0L,
+  val billId: Long,
   val billType: BillType,
-  val billPrice: Double
+  val billPrice: Double,
+  val visitId: Long
 )

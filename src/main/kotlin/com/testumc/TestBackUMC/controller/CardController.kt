@@ -17,7 +17,7 @@ class CardController(val cardService: CardService) {
   private fun getByActivityId(@PathVariable(value = "activityId") activityId: Long,
                               @RequestParam(value = "patientName", required = false) patientName: String,
                               @RequestParam(value = "page", defaultValue = "0", required = false) page: Int,
-                              @RequestParam(value = "size", defaultValue = "20", required = false) size: Int): List<Card>{
+                              @RequestParam(value = "size", defaultValue = "12", required = false) size: Int): List<Card>{
 
     // Create a new CardsResponseDTO and set its values
 

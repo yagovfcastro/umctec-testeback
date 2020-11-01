@@ -3,7 +3,6 @@ package com.testumc.TestBackUMC.service
 import com.testumc.TestBackUMC.dto.CreateActivityDTO
 import com.testumc.TestBackUMC.entity.Activity
 import com.testumc.TestBackUMC.repository.ActivityRepository
-import org.joda.time.DateTime
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.*

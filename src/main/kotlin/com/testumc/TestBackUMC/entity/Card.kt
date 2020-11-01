@@ -14,7 +14,6 @@ class Card ( // Still confused about visitId
   @Id @GeneratedValue
   val cardId: Long = 0L,
   val activityId: Long,
-  val visitId: Long = 823897,
   var slaStatus: SlaStatus,
   val createdAt: LocalDateTime,
   @Embedded

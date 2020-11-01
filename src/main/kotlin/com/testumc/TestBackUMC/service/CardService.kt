@@ -6,15 +6,11 @@ import com.testumc.TestBackUMC.entity.Card
 import com.testumc.TestBackUMC.entity.SlaStatus.*
 import com.testumc.TestBackUMC.repository.ActivityRepository
 import com.testumc.TestBackUMC.repository.CardRepository
-import org.joda.time.DateTime
-import org.joda.time.Days
-import org.joda.time.Duration
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import java.util.*
 
 @Service
 class CardService(val cardRepository: CardRepository, val activityRepository: ActivityRepository) {
@@ -26,7 +22,7 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
       createdAt = LocalDateTime.now(),
       patient = card.patient,
       bill = card.bill,
-      slaStatus = DELAYED,
+      slaStatus = OK,
       totalAmount = card.bill.billPrice,
       healthInsurance = card.healthInsurance,
       numberOfPendencies = card.numberOfPendencies,
