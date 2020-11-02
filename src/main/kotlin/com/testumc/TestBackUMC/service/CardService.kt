@@ -50,12 +50,7 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
     cardsResponseDTO.totalCardsWarning = totalCardsWarning
     cardsResponseDTO.totalCardsDelayed = totalCardsDelayed
 
-    if (patientName == null) {
-      cardsResponseDTO.cards = executeFilter(activityId, paging, filter)
-      return cardsResponseDTO
-    }
-
-    cardsResponseDTO.cards = this.cardRepository.findAllByActivityIdAndPatientPatientName(activityId, patientName, paging)
+    cardsResponseDTO.cards = executeFilter(activityId, patientName, paging, filter)
 
     return cardsResponseDTO
   }
@@ -86,15 +81,24 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
     return totalCardsList
   }
 
-  fun executeFilter(activityId: Long, paging: Pageable, filter: String): List<Card> {
-      when (filter) {
-        "PRIORITY" -> return this.cardRepository.findAllByActivityId(activityId, paging)
-        "TO_RECEIVE" -> return this.cardRepository.findAllByActivityId(activityId, paging).filter { it.numberOfNotReceivedDocuments != 0 }
-        else -> return this.cardRepository.findAllByActivityId(activityId, paging).filter {
-            it.numberOfNotReceivedDocuments == 0 &&
+  fun executeFilter(activityId: Long, patientName: String?, paging: Pageable, filter: String): List<Card> {
+    if (patientName == null) {
+      return when (filter) {
+        "PRIORITY" -> this.cardRepository.findAllByActivityId(activityId, paging)
+        "TO_RECEIVE" -> this.cardRepository.findAllByActivityId(activityId, paging).filter { it.numberOfNotReceivedDocuments != 0 }
+        else -> this.cardRepository.findAllByActivityId(activityId, paging).filter {
+          it.numberOfNotReceivedDocuments == 0 &&
             it.numberOfChecklistItem == it.numberOfDoneChecklistItem &&
             it.numberOfOpenPendencies == 0}
       }
-  }
+    }
 
+    return when (filter) {
+      "PRIORITY" -> this.cardRepository.findAllByActivityIdAndPatientPatientName(activityId, patientName, paging)
+      "TO_RECEIVE" -> this.cardRepository.findAllByActivityIdAndPatientPatientName(activityId, patientName, paging).filter { it.numberOfNotReceivedDocuments != 0 }
+      else -> this.cardRepository.findAllByActivityIdAndPatientPatientName(activityId, patientName, paging).filter { it.numberOfNotReceivedDocuments == 0 &&
+          it.numberOfChecklistItem == it.numberOfDoneChecklistItem && it.numberOfOpenPendencies == 0}
+    }
+
+  }
 }

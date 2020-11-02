@@ -1,7 +1,6 @@
 package com.testumc.TestBackUMC.repository
 
 import com.testumc.TestBackUMC.entity.Card
-import com.testumc.TestBackUMC.service.CardService
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 
