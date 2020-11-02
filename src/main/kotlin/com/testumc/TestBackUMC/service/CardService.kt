@@ -4,6 +4,7 @@ import com.testumc.TestBackUMC.dto.CardsResponseDTO
 import com.testumc.TestBackUMC.dto.CreateCardDTO
 import com.testumc.TestBackUMC.entity.Activity
 import com.testumc.TestBackUMC.entity.Card
+import com.testumc.TestBackUMC.entity.SlaStatus
 import com.testumc.TestBackUMC.entity.SlaStatus.*
 import com.testumc.TestBackUMC.repository.ActivityRepository
 import com.testumc.TestBackUMC.repository.CardRepository
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 @Service
@@ -38,6 +40,8 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
     return this.cardRepository.save(newCard)
   }
 
+  fun updateSlaStat(cardId: Long, slaStatus: SlaStatus) = this.cardRepository.updateSlaStatus(cardId, slaStatus)
+
   fun listByActivityIdAndPatientName(activityId: Long, patientName: String?, filter: String, page: Int, size: Int) : CardsResponseDTO {
     val paging: Pageable = PageRequest.of(page, size, Sort.by("slaStatus").descending())
     val totalCardsList = updateCardsSlaStatusesAndQuantity(activityId)
@@ -58,7 +62,7 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
   fun updateCardsSlaStatusesAndQuantity(activityId: Long): IntArray {
     val allCardsFromActivity =  this.cardRepository.findAllByActivityId(activityId)
     val activity: Activity = this.activityRepository.findById(activityId).get()
-    val currentDate = LocalDateTime.now()
+    val currentDate = LocalDateTime.now().plusDays(10)
 
     val totalCardsList = IntArray(3)
 
@@ -67,13 +71,13 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
       val daysInBetween = cardCreationDate.until(currentDate, ChronoUnit.DAYS)
 
       if (daysInBetween < (activity.sla * 75) / 100) {
-        this.cardRepository.findById(card.cardId).get().slaStatus = OK
+        updateSlaStat(card.cardId, OK)
         totalCardsList[0] += 1
       } else if (daysInBetween <= activity.sla && daysInBetween > (activity.sla * 75) / 100) {
-        this.cardRepository.findById(card.cardId).get().slaStatus = WARNING
+        updateSlaStat(card.cardId, WARNING)
         totalCardsList[1] += 1
       } else {
-        this.cardRepository.findById(card.cardId).get().slaStatus = DELAYED
+        updateSlaStat(card.cardId, DELAYED)
         totalCardsList[2] += 1
       }
     }
