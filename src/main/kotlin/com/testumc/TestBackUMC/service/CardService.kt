@@ -49,7 +49,7 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
     val totalCardsWarning = totalCardsList[1]
     val totalCardsDelayed = totalCardsList[2]
 
-    val cardsResponseDTO: CardsResponseDTO = CardsResponseDTO()
+    val cardsResponseDTO = CardsResponseDTO()
     cardsResponseDTO.totalCardsOk = totalCardsOk
     cardsResponseDTO.totalCardsWarning = totalCardsWarning
     cardsResponseDTO.totalCardsDelayed = totalCardsDelayed
@@ -62,7 +62,10 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
   fun updateCardsSlaStatusesAndQuantity(activityId: Long): IntArray {
     val allCardsFromActivity =  this.cardRepository.findAllByActivityId(activityId)
     val activity: Activity = this.activityRepository.findById(activityId).get()
-    val currentDate = LocalDateTime.now().plusDays(10)
+    val currentDate = LocalDateTime.now()
+
+    // Right below is a time you can use for tests
+    // val currentDate = LocalDateTime.now().plusDays(10)
 
     val totalCardsList = IntArray(3)
 
