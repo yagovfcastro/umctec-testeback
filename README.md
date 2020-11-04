@@ -79,7 +79,7 @@ Having done that, all you got to do is run the TestBackUmcApplication file and t
 }
 ```
 
-- One of the many possible **GET** routes -> ```http://localhost:8080/cards?filter=TO_RECEIVE```
+- One of the many possible **GET** routes -> ```http://localhost:8080/cards/1?filter=TO_RECEIVE```
 - Response example :
 ```json
 {
