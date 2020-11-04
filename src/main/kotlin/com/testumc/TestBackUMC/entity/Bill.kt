@@ -1,10 +1,7 @@
 package com.testumc.TestBackUMC.entity
 
+import com.testumc.TestBackUMC.enumerator.BillType
 import javax.persistence.*
-
-enum class BillType {
-  HOSPITALAR, AMBULATORIAL
-}
 
 @Embeddable
 class Bill (

@@ -17,9 +17,9 @@ class CardController(val cardService: CardService) {
                        @RequestParam(value = "patientName", required = false) patientName: String,
                        @RequestParam(value = "filter", defaultValue = "PRIORITY", required = false) filter: String,
                        @RequestParam(value = "page", defaultValue = "0", required = false) page: Int,
-                       @RequestParam(value = "size", defaultValue = "12", required = false) size: Int): CardsResponseDTO{
+                       @RequestParam(value = "perPage", defaultValue = "12", required = false) perPage: Int): CardsResponseDTO{
 
-    return this.cardService.listByActivityIdAndPatientName(activityId, patientName, filter, page, size)
+    return this.cardService.listByActivityIdAndPatientName(activityId, patientName, filter, page, perPage)
   }
 
 }

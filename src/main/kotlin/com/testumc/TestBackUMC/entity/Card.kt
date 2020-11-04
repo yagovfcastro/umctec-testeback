@@ -1,12 +1,9 @@
 package com.testumc.TestBackUMC.entity
 
+import com.testumc.TestBackUMC.enumerator.SlaStatus
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
-
-enum class SlaStatus {
-  OK, WARNING, DELAYED
-}
 
 @Entity
 @Table(name = "Card")
