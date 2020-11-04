@@ -17,6 +17,10 @@ interface CardRepository : JpaRepository<Card, Long> {
 
   fun findAllByActivityIdAndPatientPatientName(activityId: Long, patientName: String?, pageable: Pageable): List<Card>
 
+  fun findAllByActivityIdAndBillBillId(activityId: Long, billId: Long?, pageable: Pageable): List<Card>
+
+  fun findAllByActivityIdAndBillVisitId(activityId: Long, visitId: Long?, pageable: Pageable): List<Card>
+
   @Transactional
   @Modifying
   @Query("update Card u set u.slaStatus = :slaStatus where u.cardId = :cardId")

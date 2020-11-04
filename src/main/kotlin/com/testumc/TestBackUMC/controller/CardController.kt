@@ -13,7 +13,7 @@ class CardController(val cardService: CardService) {
   private fun createCard(@RequestBody card: CreateCardDTO) = this.cardService.store(card)
 
   @GetMapping("/{activityId}")
-  private fun getCards(@PathVariable(value = "activityId") activityId: Long,
+  private fun getCardsN(@PathVariable(value = "activityId") activityId: Long,
                        @RequestParam(value = "patientName", required = false) patientName: String,
                        @RequestParam(value = "filter", defaultValue = "PRIORITY", required = false) filter: String,
                        @RequestParam(value = "page", defaultValue = "0", required = false) page: Int,

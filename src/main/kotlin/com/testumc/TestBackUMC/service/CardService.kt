@@ -42,29 +42,12 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
 
   fun updateSlaStat(cardId: Long, slaStatus: SlaStatus) = this.cardRepository.updateSlaStatus(cardId, slaStatus)
 
-  fun listByActivityIdAndPatientName(activityId: Long, patientName: String?, filter: String, page: Int, size: Int) : CardsResponseDTO {
-    val paging: Pageable = PageRequest.of(page, size, Sort.by("slaStatus").descending())
-    val totalCardsList = updateCardsSlaStatusesAndQuantity(activityId)
-    val totalCardsOk = totalCardsList[0]
-    val totalCardsWarning = totalCardsList[1]
-    val totalCardsDelayed = totalCardsList[2]
-
-    val cardsResponseDTO = CardsResponseDTO()
-    cardsResponseDTO.totalCardsOk = totalCardsOk
-    cardsResponseDTO.totalCardsWarning = totalCardsWarning
-    cardsResponseDTO.totalCardsDelayed = totalCardsDelayed
-
-    cardsResponseDTO.cards = executeFilter(activityId, patientName, paging, filter)
-
-    return cardsResponseDTO
-  }
-
   fun updateCardsSlaStatusesAndQuantity(activityId: Long): IntArray {
     val allCardsFromActivity =  this.cardRepository.findAllByActivityId(activityId)
     val activity: Activity = this.activityRepository.findById(activityId).get()
     val currentDate = LocalDateTime.now()
 
-    // Right below is a time you can use for tests
+    // Right below is a Datetime you can use for tests
     // val currentDate = LocalDateTime.now().plusDays(10)
 
     val totalCardsList = IntArray(3)
@@ -88,7 +71,7 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
     return totalCardsList
   }
 
-  fun executeFilter(activityId: Long, patientName: String?, paging: Pageable, filter: String): List<Card> {
+  fun executeFilterPatientName(activityId: Long, patientName: String?, paging: Pageable, filter: String): List<Card> {
     if (patientName == null) {
       return when (filter) {
         "PRIORITY" -> this.cardRepository.findAllByActivityId(activityId, paging)
@@ -104,8 +87,42 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
       "PRIORITY" -> this.cardRepository.findAllByActivityIdAndPatientPatientName(activityId, patientName, paging)
       "TO_RECEIVE" -> this.cardRepository.findAllByActivityIdAndPatientPatientName(activityId, patientName, paging).filter { it.numberOfNotReceivedDocuments != 0 }
       else -> this.cardRepository.findAllByActivityIdAndPatientPatientName(activityId, patientName, paging).filter { it.numberOfNotReceivedDocuments == 0 &&
-          it.numberOfChecklistItem == it.numberOfDoneChecklistItem && it.numberOfOpenPendencies == 0}
+        it.numberOfChecklistItem == it.numberOfDoneChecklistItem && it.numberOfOpenPendencies == 0}
     }
-
   }
+
+  fun listByActivityIdAndPatientName(activityId: Long, patientName: String?, filter: String, page: Int, size: Int) : CardsResponseDTO {
+    val paging: Pageable = PageRequest.of(page, size, Sort.by("slaStatus").descending())
+    val totalCardsList = updateCardsSlaStatusesAndQuantity(activityId)
+    val totalCardsOk = totalCardsList[0]
+    val totalCardsWarning = totalCardsList[1]
+    val totalCardsDelayed = totalCardsList[2]
+
+    val cardsResponseDTO = CardsResponseDTO()
+    cardsResponseDTO.totalCardsOk = totalCardsOk
+    cardsResponseDTO.totalCardsWarning = totalCardsWarning
+    cardsResponseDTO.totalCardsDelayed = totalCardsDelayed
+
+    cardsResponseDTO.cards = executeFilterPatientName(activityId, patientName, paging, filter)
+
+    return cardsResponseDTO
+  }
+
+//  fun listByActivityIdAndBillBillId(activityId: Long, billId: Long?, filter: String, page: Int, size: Int) : CardsResponseDTO {
+//    val paging: Pageable = PageRequest.of(page, size, Sort.by("slaStatus").descending())
+//    val totalCardsList = updateCardsSlaStatusesAndQuantity(activityId)
+//    val totalCardsOk = totalCardsList[0]
+//    val totalCardsWarning = totalCardsList[1]
+//    val totalCardsDelayed = totalCardsList[2]
+//
+//    val cardsResponseDTO = CardsResponseDTO()
+//    cardsResponseDTO.totalCardsOk = totalCardsOk
+//    cardsResponseDTO.totalCardsWarning = totalCardsWarning
+//    cardsResponseDTO.totalCardsDelayed = totalCardsDelayed
+//
+//    cardsResponseDTO.cards = this.cardRepository.findAllByActivityIdAndBillBillId(activityId, billId, paging)
+//
+//    return cardsResponseDTO
+//  }
+
 }
