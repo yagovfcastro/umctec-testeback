@@ -5,7 +5,6 @@ import com.testumc.TestBackUMC.entity.Activity
 import com.testumc.TestBackUMC.repository.ActivityRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
-import java.util.*
 
 @Service
 class ActivityService(val activityRepository: ActivityRepository) {

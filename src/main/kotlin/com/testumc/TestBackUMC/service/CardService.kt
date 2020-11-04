@@ -41,11 +41,7 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
   private fun updateCardsSlaStatusesAndQuantity(activityId: Long): IntArray {
     val allCardsFromActivity =  this.cardRepository.findAllByActivityId(activityId)
     val activity: Activity = this.activityRepository.findById(activityId).get()
-    val currentDate = LocalDateTime.now().plusDays(10)
-
-    // Right below is a Datetime you can use for tests
-    // val currentDate = LocalDateTime.now().plusDays(10)
-
+    val currentDate = LocalDateTime.now()
     val totalCardsList = IntArray(3)
 
     for (card in allCardsFromActivity) {
@@ -73,7 +69,7 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
     return totalCardsList
   }
 
-  private fun executeFilterPatientName(activityId: Long, patientName: String?, paging: Pageable, filter: String): List<Card> {
+  private fun applyFilter(activityId: Long, patientName: String?, paging: Pageable, filter: String): List<Card> {
     if (patientName == null) {
       return when (filter) {
         "TO_SEND" -> this.cardRepository.findAllByActivityId(activityId, paging).filter { it.numberOfNotReceivedDocuments == 0 &&
@@ -103,7 +99,7 @@ class CardService(val cardRepository: CardRepository, val activityRepository: Ac
     cardsResponseDTO.totalCardsWarning = totalCardsWarning
     cardsResponseDTO.totalCardsDelayed = totalCardsDelayed
 
-    cardsResponseDTO.cards = executeFilterPatientName(activityId, patientName, paging, filter)
+    cardsResponseDTO.cards = applyFilter(activityId, patientName, paging, filter)
 
     return cardsResponseDTO
   }

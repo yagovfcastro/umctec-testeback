@@ -2,7 +2,6 @@ package com.testumc.TestBackUMC.entity
 
 import java.time.LocalDateTime
 import javax.persistence.Id
-import java.util.*
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Table

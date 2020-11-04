@@ -3,7 +3,6 @@ package com.testumc.TestBackUMC.dto
 import com.testumc.TestBackUMC.entity.Bill
 import com.testumc.TestBackUMC.entity.HealthInsurance
 import com.testumc.TestBackUMC.entity.Patient
-import java.util.*
 
 class CreateCardDTO (
   val activityId: Long,
